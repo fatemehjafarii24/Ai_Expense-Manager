@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: personal-finance-manager
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /accounts/login/
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: personal-finance-manager.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://personal-finance-manager.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: personal-finance-db
+          property: connectionString
+
+databases:
+  - name: personal-finance-db
+    databaseName: personal_finance
+    user: personal_finance
+    plan: free
