@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_edit %}ویرایش انتقال{% else %}انتقال جدید{% endif %}{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+<div class="mb-6"><p class="text-sm font-medium text-brand-600 dark:text-brand-400">انتقال وجه</p><h2 class="mt-2 text-2xl font-black text-slate-900 dark:text-white">{% if is_edit %}ویرایش انتقال{% else %}انتقال جدید{% endif %}</h2></div>
+<form method="post" class="space-y-5">
+    {% csrf_token %}
+    {% for field in form %}<div><label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">{{ field.label }}</label>{{ field }}{% if field.errors %}<p class="mt-2 text-sm text-rose-500">{{ field.errors|join:", " }}</p>{% endif %}</div>{% endfor %}
+    {% if form.non_field_errors %}<div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ form.non_field_errors|join:", " }}</div>{% endif %}
+    <div class="flex flex-col gap-3 pt-2 sm:flex-row"><button type="submit" class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-700">ذخیره انتقال</button><a class="inline-flex items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50" href="{% url 'banking:transfer_list' %}">انصراف</a></div>
+</form>
+</div>
+{% endblock %}

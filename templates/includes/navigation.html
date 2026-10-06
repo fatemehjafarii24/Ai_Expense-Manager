@@ -1,0 +1,14 @@
+<aside id="app-sidebar" class="app-sidebar" aria-label="منوی اصلی">
+    <div class="sidebar-brand"><span class="brand-mark">M</span><div><strong>MyBalance</strong><small>مدیریت مالی شخصی</small></div></div>
+    <div class="sidebar-label">دسترسی سریع</div>
+    <nav class="sidebar-nav">
+        <a href="{% url 'dashboard:weekly' %}" class="sidebar-link {% if request.resolver_match.namespace == 'dashboard' and request.resolver_match.url_name == 'weekly' %}is-active{% endif %}"><i data-lucide="layout-dashboard"></i><span>داشبورد هفتگی</span></a>
+        <a href="{% url 'dashboard:monthly' %}" class="sidebar-link {% if request.resolver_match.namespace == 'dashboard' and request.resolver_match.url_name == 'monthly' %}is-active{% endif %}"><i data-lucide="calendar-range"></i><span>داشبورد ماهانه</span></a>
+        <a href="{% url 'transactions:list' %}" class="sidebar-link {% if request.resolver_match.namespace == 'transactions' and request.resolver_match.url_name == 'list' %}is-active{% endif %}"><i data-lucide="arrow-left-right"></i><span>تراکنش‌ها</span></a>
+        <a href="{% url 'banking:card_list' %}" class="sidebar-link {% if request.resolver_match.namespace == 'banking' and request.resolver_match.url_name == 'card_list' %}is-active{% endif %}"><i data-lucide="credit-card"></i><span>کارت‌ها</span></a>
+        <a href="{% url 'banking:transfer_list' %}" class="sidebar-link {% if request.resolver_match.namespace == 'banking' and request.resolver_match.url_name == 'transfer_list' %}is-active{% endif %}"><i data-lucide="send"></i><span>انتقال‌ها</span></a>
+        <a href="{% url 'transactions:category_list' %}" class="sidebar-link {% if request.resolver_match.namespace == 'transactions' and request.resolver_match.url_name == 'category_list' %}is-active{% endif %}"><i data-lucide="tags"></i><span>دسته‌بندی‌ها</span></a>
+    </nav>
+    <div class="sidebar-footer"><div class="sidebar-tip"><i data-lucide="sparkles"></i><span>کنترل مالی، ساده‌تر از همیشه</span></div><form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button type="submit" class="sidebar-logout"><i data-lucide="log-out"></i><span>خروج از حساب</span></button></form></div>
+</aside>
+<div id="sidebar-backdrop" class="sidebar-backdrop"></div>

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}ویرایش تراکنش{% else %}تراکنش جدید{% endif %}{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+    <div class="mb-6">
+        <p class="text-sm font-medium text-brand-600 dark:text-brand-400">ثبت تراکنش</p>
+        <h2 class="mt-2 text-2xl font-black text-slate-900 dark:text-white">{% if object %}ویرایش تراکنش{% else %}تراکنش جدید{% endif %}</h2>
+    </div>
+
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.name != "new_category_name" %}
+            <div>
+                <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <p class="mt-2 text-sm text-rose-500">{{ field.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800">
+            <a href="#" id="toggle-new-category" class="inline-flex items-center text-sm font-medium text-brand-600 transition hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">+ دسته‌بندی جدید</a>
+            <div id="new-category-panel" class="mt-4 hidden space-y-3">
+                <p class="text-sm text-slate-600 dark:text-slate-300">مبلغ مثبت = دسته درآمد | مبلغ منفی = دسته هزینه</p>
+                <div>
+                    <label for="{{ form.new_category_name.id_for_label }}" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">{{ form.new_category_name.label }}</label>
+                    {{ form.new_category_name }}
+                    {% if form.new_category_name.errors %}
+                    <p class="mt-2 text-sm text-rose-500">{{ form.new_category_name.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-700 dark:bg-rose-950/60 dark:text-rose-200">
+            {{ form.non_field_errors|join:", " }}
+        </div>
+        {% endif %}
+
+        <div class="flex flex-col gap-3 pt-2 sm:flex-row">
+            <button type="submit" class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">ذخیره</button>
+            <a href="{% url 'transactions:list' %}" class="inline-flex items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">انصراف</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

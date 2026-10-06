@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="h-full scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#102a43">
+    <title>{% block title %}مدیریت مالی شخصی{% endblock %}</title>
+    {% load static %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    },
+                    boxShadow: { soft: '0 18px 48px -20px rgba(16, 42, 67, 0.28)' },
+                    colors: {
+                        brand: {
+                            50: '#eefaf7',
+                            100: '#d9f6ee',
+                            50: '#e7f8f5',
+                            500: '#16a085',
+                            600: '#11806a',
+                            700: '#0d6655',
+                        },
+                        accent: {
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                        },
+                    },
+                }
+            }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260916">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-full bg-slate-100 font-sans text-slate-800 antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
+    <div class="app-background min-h-screen">
+        {% if user.is_authenticated %}
+        {% include "includes/navigation.html" %}
+        <header class="topbar">
+            <div class="topbar-inner">
+                <button id="mobile-sidebar-toggle" type="button" class="icon-button mobile-menu-button" aria-label="باز کردن منو" aria-controls="app-sidebar" aria-expanded="false"><i data-lucide="menu"></i></button>
+                <div class="breadcrumb"><span class="breadcrumb-dot"></span><span>فضای مالی شخصی</span><span class="breadcrumb-separator">/</span><strong>{% block breadcrumb %}نمای کلی{% endblock %}</strong></div>
+                <div class="topbar-actions">
+                    <button id="theme-toggle" type="button" class="icon-button" aria-label="تغییر تم"><i data-lucide="sun-moon"></i></button>
+                    <form method="post" action="{% url 'accounts:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="user-chip" aria-label="خروج از حساب">
+                            <span class="user-avatar">{{ user.username|first|upper }}</span><span class="hidden sm:inline">{{ user.username }}</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </header>
+        {% endif %}
+
+        <main class="{% block main_class %}app-main max-w-7xl px-4 py-6 sm:px-6 lg:px-8{% endblock %}">
+            {% include "includes/messages.html" %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
+    <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

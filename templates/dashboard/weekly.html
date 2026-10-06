@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% load jalali_tags %}
+
+{% block title %}داشبورد هفتگی{% endblock %}
+{% block breadcrumb %}داشبورد هفتگی{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <section class="dashboard-hero rounded-[2rem] border border-slate-200 bg-white/90 p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900/90 sm:p-6">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <p class="text-sm font-medium text-brand-600 dark:text-brand-400">داشبورد مالی</p>
+                <h2 class="mt-2 text-2xl font-black text-slate-900 dark:text-white">گزارش هفتگی</h2>
+            </div>
+
+            <form method="get" class="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <label class="text-sm font-medium text-slate-700 dark:text-slate-200">
+                    <span class="mb-2 block">سال</span>
+                    <input type="text" inputmode="numeric" name="year" value="{{ year|persian_digits }}" class="w-28 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-brand-400 dark:focus:ring-brand-500/20">
+                </label>
+                <label class="text-sm font-medium text-slate-700 dark:text-slate-200">
+                    <span class="mb-2 block">تاریخ در هفته</span>
+                    <input type="text" name="week_date" class="jalali-date-input w-40 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-brand-400 dark:focus:ring-brand-500/20" value="{{ week_date }}">
+                </label>
+                <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">نمایش</button>
+            </form>
+        </div>
+
+        <div class="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
+            <span class="rounded-full bg-brand-50 px-3 py-1.5 font-medium text-brand-700 dark:bg-brand-500/10 dark:text-brand-300">هفته {{ week|persian_digits }}</span>
+            <span>بازه {{ start_date|jalali }} تا {{ end_date|jalali }}</span>
+        </div>
+    </section>
+
+    <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <div class="kpi-card kpi-income rounded-[1.5rem] border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-900 dark:bg-emerald-950/30">
+            <div class="mb-4 flex items-center justify-between"><span class="kpi-icon"><i data-lucide="trending-up"></i></span><span class="kpi-caption">ورودی</span></div>
+            <p class="text-sm text-emerald-700 dark:text-emerald-300">مجموع درآمد</p>
+            <p class="mt-3 text-2xl font-black text-emerald-700 dark:text-emerald-200">{{ total_income|money }}</p>
+        </div>
+        <div class="kpi-card rounded-[1.5rem] border border-rose-200 bg-rose-50 p-5 dark:border-rose-900 dark:bg-rose-950/30">
+            <div class="mb-4 flex items-center justify-between"><span class="kpi-icon"><i data-lucide="trending-down"></i></span><span class="kpi-caption">خروجی</span></div>
+            <p class="text-sm text-rose-700 dark:text-rose-300">مجموع هزینه</p>
+            <p class="mt-3 text-2xl font-black text-rose-700 dark:text-rose-200">{{ total_expense|money }}</p>
+        </div>
+        <div class="kpi-card rounded-[1.5rem] border border-sky-200 bg-sky-50 p-5 dark:border-sky-900 dark:bg-sky-950/30">
+            <div class="mb-4 flex items-center justify-between"><span class="kpi-icon"><i data-lucide="scale"></i></span><span class="kpi-caption">تعادل</span></div>
+            <p class="text-sm text-sky-700 dark:text-sky-300">خالص</p>
+            <p class="mt-3 text-2xl font-black text-sky-700 dark:text-sky-200">{{ net|money }}</p>
+        </div>
+        <div class="kpi-card rounded-[1.5rem] border border-violet-200 bg-violet-50 p-5 dark:border-violet-900 dark:bg-violet-950/30">
+            <div class="mb-4 flex items-center justify-between"><span class="kpi-icon"><i data-lucide="list-checks"></i></span><span class="kpi-caption">فعالیت</span></div>
+            <p class="text-sm text-violet-700 dark:text-violet-300">تعداد تراکنش</p>
+            <p class="mt-3 text-2xl font-black text-violet-700 dark:text-violet-200">{{ transaction_count|persian_digits }}</p>
+        </div>
+        <div class="kpi-card rounded-[1.5rem] border border-amber-200 bg-amber-50 p-5 dark:border-amber-900 dark:bg-amber-950/30">
+            <div class="mb-4 flex items-center justify-between"><span class="kpi-icon"><i data-lucide="wallet"></i></span><span class="kpi-caption">دارایی</span></div>
+            <p class="text-sm text-amber-700 dark:text-amber-300">موجودی کل کارت‌ها</p>
+            <p class="mt-3 text-2xl font-black text-amber-700 dark:text-amber-200">{{ total_balance|money }}</p>
+        </div>
+    </section>
+
+    <section class="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-4 flex items-center justify-between">
+                <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">هزینه بر اساس دسته</h3>
+                <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ expense_breakdown|length|persian_digits }} دسته</span>
+            </div>
+            <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+                <table class="min-w-full text-sm">
+                    <thead class="bg-slate-50 dark:bg-slate-800">
+                        <tr>
+                            <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">دسته</th>
+                            <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">مبلغ</th>
+                            <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">تعداد</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in expense_breakdown %}
+                        <tr class="border-t border-slate-200 dark:border-slate-700">
+                            <td class="px-4 py-3 text-slate-800 dark:text-slate-100">{{ row.name }}</td>
+                            <td class="px-4 py-3 text-rose-600 dark:text-rose-300">{{ row.total|money }}</td>
+                            <td class="px-4 py-3 text-slate-600 dark:text-slate-300">{{ row.count|persian_digits }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="px-4 py-6 text-center text-slate-500 dark:text-slate-400">داده‌ای وجود ندارد.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="chart-frame mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800">
+                <canvas id="expenseChart"></canvas>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+                <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">خلاصه وضعیت</h3>
+                <div class="mt-4 space-y-4 text-sm text-slate-700 dark:text-slate-200">
+                    <div class="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800">
+                        <span>مجموع موجودی کارت‌ها</span>
+                        <strong>{{ total_balance|money }}</strong>
+                    </div>
+                    <div class="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800">
+                        <span>بیشترین هزینه</span>
+                        <strong class="text-rose-600 dark:text-rose-300">
+                            {% if highest_expense_category %}{{ highest_expense_category.name }}{% else %}—{% endif %}
+                        </strong>
+                    </div>
+                    <div class="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800">
+                        <span>بیشترین درآمد</span>
+                        <strong class="text-emerald-600 dark:text-emerald-300">
+                            {% if highest_income_category %}{{ highest_income_category.name }}{% else %}—{% endif %}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+                <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">موجودی کارت‌ها</h3>
+                <div class="mt-4 space-y-3">
+                    {% for c in cards %}
+                    <div class="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2.5 dark:border-slate-700">
+                        <span class="font-medium text-slate-700 dark:text-slate-200">{{ c.title }}</span>
+                        <span class="font-bold text-slate-900 dark:text-white">{{ c.balance|money }}</span>
+                    </div>
+                    {% empty %}
+                    <p class="text-sm text-slate-500 dark:text-slate-400">کارت فعالی ثبت نشده است.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div class="mb-4 flex items-center justify-between">
+            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">درآمد بر اساس دسته</h3>
+            <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ income_breakdown|length|persian_digits }} دسته</span>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+            <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+                <table class="min-w-full text-sm">
+                    <thead class="bg-slate-50 dark:bg-slate-800">
+                        <tr>
+                            <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">دسته</th>
+                            <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">مبلغ</th>
+                            <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">تعداد</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in income_breakdown %}
+                        <tr class="border-t border-slate-200 dark:border-slate-700">
+                            <td class="px-4 py-3 text-slate-800 dark:text-slate-100">{{ row.name }}</td>
+                            <td class="px-4 py-3 text-emerald-600 dark:text-emerald-300">{{ row.total|money }}</td>
+                            <td class="px-4 py-3 text-slate-600 dark:text-slate-300">{{ row.count|persian_digits }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="px-4 py-6 text-center text-slate-500 dark:text-slate-400">داده‌ای وجود ندارد.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="chart-frame rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800">
+                <canvas id="incomeChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+        <div class="mb-4 flex items-center justify-between">
+            <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">تراکنش‌های اخیر</h3>
+            <a href="{% url 'transactions:list' %}" class="text-sm font-medium text-brand-600 transition hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">مشاهده همه</a>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700">
+            <table class="min-w-full text-sm">
+                <thead class="bg-slate-50 dark:bg-slate-800">
+                    <tr>
+                        <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">تاریخ</th>
+                        <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">عنوان</th>
+                        <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">کارت</th>
+                        <th class="px-4 py-3 text-right font-semibold text-slate-700 dark:text-slate-200">مبلغ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in recent_transactions %}
+                    <tr class="border-t border-slate-200 dark:border-slate-700">
+                        <td class="px-4 py-3 text-slate-600 dark:text-slate-300">{{ tx.transaction_date|jalali }}</td>
+                        <td class="px-4 py-3 text-slate-800 dark:text-slate-100">{{ tx.title }}{% if tx.transaction_kind == 'transfer' %}<span class="text-slate-500 dark:text-slate-400"> (انتقال)</span>{% endif %}</td>
+                        <td class="px-4 py-3 text-slate-600 dark:text-slate-300">{{ tx.card.title }}</td>
+                        <td class="px-4 py-3 font-bold {% if tx.amount > 0 %}text-emerald-600 dark:text-emerald-300{% else %}text-rose-600 dark:text-rose-300{% endif %}">{% if tx.amount > 0 %}+{% endif %}{{ tx.amount|money }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="px-4 py-6 text-center text-slate-500 dark:text-slate-400">تراکنشی ثبت نشده است.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    var expenseData = {{ expense_chart|safe }};
+    var incomeData = {{ income_chart|safe }};
+    var chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                ticks: {
+                    callback: function (value) {
+                        return new Intl.NumberFormat('fa-IR').format(Number(value));
+                    }
+                }
+            }
+        }
+    };
+    if (expenseData.length) {
+        new Chart(document.getElementById('expenseChart'), {
+            type: 'bar',
+            data: {
+                labels: expenseData.map(function (d) { return d.label; }),
+                datasets: [{ label: 'هزینه', data: expenseData.map(function (d) { return d.value; }), backgroundColor: '#f87171', borderRadius: 8 }]
+            },
+            options: chartOptions
+        });
+    }
+    if (incomeData.length) {
+        new Chart(document.getElementById('incomeChart'), {
+            type: 'bar',
+            data: {
+                labels: incomeData.map(function (d) { return d.label; }),
+                datasets: [{ label: 'درآمد', data: incomeData.map(function (d) { return d.value; }), backgroundColor: '#34d399', borderRadius: 8 }]
+            },
+            options: chartOptions
+        });
+    }
+})();
+</script>
+{% endblock %}
