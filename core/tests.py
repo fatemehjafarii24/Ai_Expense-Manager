@@ -197,6 +197,11 @@ class FinanceTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/accounts/login/", response.url)
 
+    def test_render_domains_are_allowed(self):
+        from django.conf import settings
+
+        self.assertIn("*.onrender.com", settings.ALLOWED_HOSTS)
+
     def test_cash_card_created_on_signup(self):
         self.assertTrue(BankCard.objects.filter(user=self.user, is_cash=True, title="نقدی").exists())
 
